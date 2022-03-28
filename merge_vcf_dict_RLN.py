@@ -75,9 +75,12 @@ def read_vcf(path):
                                 C = C.replace('Y',str(24))
                                 C = C.replace('M',str(25))
                                 #q = row[0][0].replace('chr',''),int(row[0][1]),''.join(row[0][3]),''.join(row[0][4])
-                                q = int(C),int(row[0][1]),''.join(row[0][3]),''.join(row[0][4])
+                                #q = int(C),int(row[0][1]),''.join(row[0][3]),''.join(row[0][4])
+                                q = int(C),int(row[0][1]),''.join(row[0][3])
                                 t = tuple(q)
-                                R[t] = row                
+                                #if not t in R: R[t] = list()
+                                R[t] = row
+                                #R[t].append(row)                
                         else:
                             #data += [line.replace('\n', '').rsplit('\t')]
                             row = [line.replace('\n', '').rsplit('\t')]
@@ -87,9 +90,10 @@ def read_vcf(path):
                             C = C.replace('Y',str(24))
                             C = C.replace('M',str(25))
                             #q = row[0][0].replace('chr',''),int(row[0][1]),''.join(row[0][3]),''.join(row[0][4])
-                            q = int(C),int(row[0][1]),''.join(row[0][3]),''.join(row[0][4])
+                            #q = int(C),int(row[0][1]),''.join(row[0][3]),''.join(row[0][4])
+                            q = int(C),int(row[0][1]),''.join(row[0][3])
                             t = tuple(q)
-                        R[t] = row
+                            R[t] = row
                     last = line 
                         
     else:
@@ -120,9 +124,12 @@ def read_vcf(path):
                                 C = C.replace('Y',str(24))
                                 C = C.replace('M',str(25))
                                 #q = row[0][0].replace('chr',''),int(row[0][1]),''.join(row[0][3]),''.join(row[0][4])
-                                q = int(C),int(row[0][1]),''.join(row[0][3]),''.join(row[0][4])
+                                #q = int(C),int(row[0][1]),''.join(row[0][3]),''.join(row[0][4])
+                                q = int(C),int(row[0][1]),''.join(row[0][3])
                                 t = tuple(q)
-                                R[t] = row                
+                                #if not t in R: R[t] = list()
+                                R[t] = row
+                                #R[t].append(row)                
                         else:
                             #data += [line.replace('\n', '').rsplit('\t')]
                             row = [line.replace('\n', '').rsplit('\t')]
@@ -132,7 +139,8 @@ def read_vcf(path):
                             C = C.replace('Y',str(24))
                             C = C.replace('M',str(25))
                             #q = row[0][0].replace('chr',''),int(row[0][1]),''.join(row[0][3]),''.join(row[0][4])
-                            q = int(C),int(row[0][1]),''.join(row[0][3]),''.join(row[0][4])
+                            #q = int(C),int(row[0][1]),''.join(row[0][3]),''.join(row[0][4])
+                            q = int(C),int(row[0][1]),''.join(row[0][3])
                             t = tuple(q)
                             R[t] = row
                     last = line 
@@ -201,7 +209,8 @@ h2_source_name = h2_source[1].split(" ",1)[0]
 
 ## Merge header lines for the output file
 print('Merging header information')
-h3_file_format = sorted(list(set(h1_file + h2_file)))
+h3_file_format = sorted(list(set(h1_file)))
+#h3_file_format = sorted(list(set(h1_file + h2_file)))
 h3_additional = sorted(list(set(h1_additional + h2_additional)),reverse=True)
 h3_source = sorted(list(set(h1_source + h2_source)))
 h3_title = h1_title
@@ -282,50 +291,50 @@ for i in common_keys:
 ### Print out ##fileformat
 with open(out_file, 'w') as f:
     for l in range(len(h3_file_format)):
-        print (h3_file_format[l],end ="", file=f)
+        print (h3_file_format[l],end ="", file=f, sep='')
         if l == 0:
-            print ("=",end ="", file=f)
+            print ("=",end ="", file=f, sep='')
         elif l != len(h3_file_format)-1 :
-            print (",",end ="", file=f)
-    print ("", file=f)        
+            print (",",end ="", file=f, sep='')
+    print ("", file=f, sep='')        
 
 ### Print out ##source
 with open(out_file, 'a') as f:
     for l in range(len(h3_source)):
-        print (h3_source[l],end ="", file=f)
+        print (h3_source[l],end ="", file=f, sep='')
         if l == 0:
-            print ("=",end ="", file=f)
+            print ("=",end ="", file=f, sep='')
         elif l != len(h3_source)-1 :
-            print (",",end ="", file=f)
-    print ("", file=f)        
+            print (",",end ="", file=f, sep='')
+    print ("", file=f, sep='')        
 
 ### Print out phasing, filedate, contigs, commandline, filter etc    
     for l in range(len(h3_additional)):
-        print (h3_additional[l], file=f)
+        print (h3_additional[l], file=f, sep='')
 
 ### Print out INFO strings from file vcf1
     for l in h1_info_string:
-        print (h1_info_string[l], file=f)
+        print (h1_info_string[l], file=f, sep='')
 
 ### Print out the new INFO field
     temp_str = '##INFO=<ID=calledBy,Number=A,Type=String,Description="Name of the tool which called the variant. If a variant is called by both tools, value is set as calledBy=' + h1_source_name + '+' + h2_source_name + '">'
-    print (temp_str, file=f)
+    print (temp_str, file=f, sep='')
     
 ### Print out INFO strings from file vcf2
     for l in h2_info_string:
-        print (h2_info_string[l], file=f)
+        print (h2_info_string[l], file=f, sep='')
 
 ### Print out Format strings from file vcf1
     for l in h1_format_string:
-        print (h1_format_string[l], file=f)
+        print (h1_format_string[l], file=f, sep='')
 
 ### Print out Format strings from file vcf2
     for l in h2_format_string:
-        print (h2_format_string[l], file=f)
+        print (h2_format_string[l], file=f, sep='')
 
 ### Print out Title
     for l in range(len(h3_title)):
-        print (h3_title[l],"\t",end ="", file=f)
+        print (h3_title[l],"\t",end ="", file=f, sep='')
     print ("", file=f)
     
 ### Set operations on Dictionary messes up with the order, hence need to sort by chr, pos fields
@@ -335,7 +344,7 @@ with open(out_file, 'a') as f:
 ### Print out the merged variant calls 
     for value in com_key:
         for l in range(len(d[value][0])):
-            print (d[value][0][l],"\t",end =" ", file=f)
+            print (d[value][0][l],"\t",end ="", file=f, sep='')
         print ("", file=f)
 f.close
 print('Done !!! The output is in the file %s'%out_file)
