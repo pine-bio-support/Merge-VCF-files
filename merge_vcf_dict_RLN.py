@@ -36,6 +36,8 @@ else:
     raise IOError
 if args.out is not None:
     out_file = args.out
+    temp_str = args.out.split('.')
+    out_tsv_file = temp_str[0] + "_table.txt"
 else:
     print('out_file not given!')
     print ('Usage: \n python merge_vcf_dict_RLN.py -i1 diploid_samples.vcf -i2 ClinVar_tp53.vcf -o common_dip_clvar_tp53.vcf')
@@ -347,4 +349,19 @@ with open(out_file, 'a') as f:
             print (d[value][0][l],"\t",end ="", file=f, sep='')
         print ("", file=f)
 f.close
-print('Done !!! The output is in the file %s'%out_file)
+
+
+#### Print out the table output
+with open(out_tsv_file, 'w') as f:
+    print ('CHROM  POS REF ALT', file=f, sep='')
+    for value in com_key:
+        temp_str = "chr" + str(value).strip('()').replace("'","").replace(",","") + '\t' + str(d[value][0][4])
+        temp_str = temp_str.replace('chr23','chrX')
+        temp_str = temp_str.replace('chr24','chrY')
+        temp_str = temp_str.replace('chr25','chrM')
+        print (temp_str, file=f, sep='')
+f.close
+        
+print('Done !!! The VCF output is in the file %s'%out_file)
+print('Done !!! The table output is in the file %s'%out_tsv_file)
+
